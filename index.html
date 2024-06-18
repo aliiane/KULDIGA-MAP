@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Geospatial Analysis</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        L_NO_TOUCH = false;
+        L_DISABLE_3D = false;
+    </script>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+</head>
+<body>
+    <div style="position: fixed; bottom: 50px; left: 50px; width: 220px; height: 175px; background-color: white; z-index:9999; font-size:14px; border:2px solid grey; padding: 10px; border-radius: 8px; box-shadow: 3px 3px 5px grey;">
+        <i class="fa fa-map-marker fa-2x" style="color:red"></i> Historical Event Site<br>
+        <i class="fa fa-map-marker fa-2x" style="color:blue"></i> Archaeology<br>
+        <i class="fa fa-map-marker fa-2x" style="color:green"></i> Art<br>
+        <i class="fa fa-map-marker fa-2x" style="color:purple"></i> Architecture<br>
+        <i class="fa fa-map-marker fa-2x" style="color:orange"></i> Urban Planning<br>
+    </div>
+    <header>
+        <h1>Kuldīga Cultural Heritage</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="historical.html">Historical Overview</a></li>
+                <li><a href="architectural.html">Architectural Analysis</a></li>
+                <li><a href="visualizations.html">Data Visualizations</a></li>
+                <li><a href="geospatial.html">Geospatial Analysis</a></li>
+                <li><a href="research.html">Research and Methodology</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="bibliography.html">Bibliography</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Geospatial Analysis</h2>
+            <div id="map"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Kuldīga Cultural Heritage Project</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <script>
+        var map = L.map('map').setView([56.967968, 21.970842], 14);
+
+        L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+            maxZoom: 18
+        }).addTo(map);
+
+        var markers = L.markerClusterGroup();
+
+        var sites = [
+            {
+                coords: [56.9687567836292, 21.9647661265699],
+                iconColor: 'red',
+                title: 'BALTIC TEACHERS\' SEMINARY',
+                address: 'Kuldīgas nov., Kuldīga, Liepājas iela 31',
+                type: 'Historical Event Site',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1886-1915',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'http://ekas.kuldiga.lv/img/atteli/1213948223485b613f165ea.jpg' 
+            },
+            {
+                coords: [56.9679683104667, 21.9708420049112],
+                iconColor: 'blue',
+                title: 'KULDĪGA OLD TOWN',
+                address: 'Kuldīgas nov., Kuldīga; centrā',
+                type: 'Archaeology',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: 'Medieval - Modern Times; 13th - 19th century',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://visitkuldiga.com/wp-content/uploads/2021/12/Kuldiga-no-augsas-1025x768.jpg?lang=en' 
+            },
+            {
+                coords: [56.96796831, 21.970842],
+                iconColor: 'blue',
+                title: 'Old Kuldīga Hillfort with Old Town',
+                address: 'Kuldīgas nov., Kuldīga; starp Veckuldīgas upīti un Ventu',
+                type: 'Archaeology',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: 'Late Iron Age - Medieval',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Kuldīgas_kuršu_pilskalns.jpg/1024px-Kuldīgas_kuršu_pilskalns.jpg'
+            },
+            {
+                coords: [56.96895399, 21.97648426],
+                iconColor: 'blue',
+                title: 'Kuldīga Medieval Castle',
+                address: 'Kuldīgas nov., Kuldīga, Pils iela 1',
+                type: 'Archaeology',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: 'Medieval - Modern Times; 13th - 18th century',
+                accessibility: 'Partly Available',
+                status: 'Good',
+                img: 'http://ekas.kuldiga.lv/img/atteli/118819665746d2713155101.jpg' 
+            },
+            {
+                coords: [56.97024737, 21.97327803],
+                iconColor: 'green',
+                title: 'Altar',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 33; Sv. Katrīnas luterāņu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1660-1663',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://visitkuldiga.com/wp-content/uploads/2021/10/Katrinas_baznica_3-1152x768.jpg?lang=en' 
+            },
+            {
+                coords: [56.97024737, 21.97327803],
+                iconColor: 'green',
+                title: 'Relief "Kuldīga Coat of Arms',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 33; Sv. Katrīnas luterāņu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1791',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Kuldiga_Wappen.JPG/1280px-Kuldiga_Wappen.JPG' 
+            },
+            {
+                coords: [56.97024737, 21.97327803],
+                iconColor: 'green',
+                title: 'Organ Loft Paintings (10)',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 33; Sv. Katrīnas luterāņu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '17th century second half',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Pipe_organ_of_Church_of_Saint_Catherine_in_Kuldīga_1.jpg/1280px-Pipe_organ_of_Church_of_Saint_Catherine_in_Kuldīga_1.jpg' 
+            },
+            {
+                coords: [56.97024737, 21.97327803],
+                iconColor: 'green',
+                title: 'Organ Prospect',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 33; Sv. Katrīnas luterāņu baznīcā',
+                type: 'Art',
+                valueGroup:'Nationally Significant Cultural Monument',
+                dating: '1691-1692',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/d/d6/Pipe_organ_of_Church_of_Saint_Catherine_in_Kuldīga_3.jpg' 
+            },
+            {
+                coords: [56.97024737, 21.97327803],
+                iconColor: 'green',
+                title: 'Organ',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 33; Sv. Katrīnas luterāņu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1882',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/6/60/Pipe_organ_of_Church_of_Saint_Catherine_in_Kuldīga_2.jpg' 
+            },
+            {
+                coords: [56.97024737, 21.97327803],
+                iconColor: 'green',
+                title: 'Interior Decorative Finish',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 33; Sv. Katrīnas luterāņu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '17th century, beginning of the 20th century',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Santa_Caterina_-_Kuldiga.jpg/1024px-Santa_Caterina_-_Kuldiga.jpg' 
+            },
+            {
+                coords: [56.97024737, 21.97327803],
+                iconColor: 'green',
+                title: 'Pulpit',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 33; Sv. Katrīnas luterāņu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1659-1663, beginning of the 18th century',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Pulpit_of_Church_of_Saint_Catherine_in_Kuldīga_1.jpg' 
+            },
+            {
+                coords: [56.9663484, 21.96803514],
+                iconColor: 'green',
+                title: 'Organ',
+                address: 'Kuldīgas nov., Kuldīga, Dzirnavu iela 12; Sv. Annas luterāņu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1927',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://visitkuldiga.com/wp-content/uploads/2021/10/Annas_baznica_1-513x768.jpg?lang=en' 
+            },
+            {
+                coords: [56.9663484, 21.96803514],
+                iconColor: 'green',
+                title: 'Stained Glass Windows (3)',
+                address: 'Kuldīgas nov., Kuldīga, Dzirnavu iela 12; Sv. Annas luterāņu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1939',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://visitkuldiga.com/wp-content/uploads/2021/10/Anna_baznica_5.jpg?lang=en' 
+            },
+            {
+                coords: [56.9675699, 21.971895],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 2',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: 'beginning of the 19th century',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Jelgavas_iela_2_%283%29.jpg/1280px-Jelgavas_iela_2_%283%29.jpg' 
+            },
+            {
+                coords: [56.9658989, 21.971828],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 16',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '19th century second half',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Jelgavas_iela_16_%286%29.jpg/800px-Jelgavas_iela_16_%286%29.jpg' 
+            },
+            {
+                coords: [56.9652079, 21.9729],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 24',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '19th century second half',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Jelgavas_iela_24_%285%29.jpg/800px-Jelgavas_iela_24_%285%29.jpg' 
+            },
+            {
+                coords: [56.9647259, 21.973816],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 27',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '19th century first half',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://www.redzet.lv/images/large/7/14/V-1631-23.jpg' 
+            },
+            {
+                coords: [56.9646639, 21.974106],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 29',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '19th century first half',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Jelgavas_iela_29.jpg/800px-Jelgavas_iela_29.jpg' 
+            },
+            {
+                coords: [56.9647819, 21.974602],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 32',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '19th century second half',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Jelgavas_iela_32_%281%29_1.jpg/800px-Jelgavas_iela_32_%281%29_1.jpg' 
+            },
+            {
+                coords: [56.9677113936758, 21.9727074],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Kalna iela 13',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '19th century second half',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Durvju_komplekts%2C_Kuldīga%2C_Kalna_iela_13_%281%29.jpg/800px-Durvju_komplekts%2C_Kuldīga%2C_Kalna_iela_13_%281%29.jpg' 
+            },
+            {
+                coords: [56.9677552830739, 21.97269131],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Kalna iela 14',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: 'beginning of the 19th century, 19th century second half',
+                accessibility: 'Partly Available',
+                status: 'Good',
+                img: 'http://ekas.kuldiga.lv/img/atteli/118906056646df9fd6c07c0.jpg' 
+            },
+            {
+                coords: [56.96841083, 21.97276776],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Kalna iela 15',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '18th century end, 19th century first half',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Kalna_iela_15_durvju_komplekts_%282%29.jpg/800px-Kalna_iela_15_durvju_komplekts_%282%29.jpg' 
+            },
+            {
+                coords: [56.96853594, 21.97077446],
+                iconColor: 'green',
+                title: 'Relief',
+                address: 'Kuldīgas nov., Kuldīga, Liepājas iela 1',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1632',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Liepājas_iela_1_cilnis_%281%29.jpg/1280px-Liepājas_iela_1_cilnis_%281%29.jpg' 
+            },
+            {
+                coords: [56.9684993947148, 21.9673299],
+                iconColor: 'green',
+                title: 'Door Set',
+                address: 'Kuldīgas nov., Kuldīga, Liepājas iela 17',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '19th century first quarter',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Ieejas_portāls.jpg/800px-Ieejas_portāls.jpg' 
+            },
+            {
+                coords: [56.9698341, 21.9645907],
+                iconColor: 'green',
+                title: 'Tsar\'s Gate',
+                address: 'Kuldīgas nov., Kuldīga, Smilšu iela 14; Kuldīgas pareizticīgo baznīcā',
+                type: 'Art',
+                valueGroup: 'Regionally Significant Cultural Monument',
+                dating: '1871',
+                accessibility: 'Partly Available',
+                status: 'Satisfactory',
+                img: 'http://ekas.kuldiga.lv/img/atteli/1216193995487da5cb1a914.jpg' 
+            },
+            {
+                coords: [56.9686219, 21.964755],
+                iconColor: 'green',
+                title: 'Dome Paintings',
+                address: 'Kuldīgas nov., Kuldīga, Liepājas iela 31',
+                type: 'Art',
+                valueGroup: 'Regionally Significant Cultural Monument',
+                dating: '1871',
+                accessibility: 'Partly Available',
+                status: 'Unsatisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Baltijas_skolotāju_seminārs_%28no_1866._gada_līdz_1915._gadam%29.jpg/1024px-Baltijas_skolotāju_seminārs_%28no_1866._gada_līdz_1915._gadam%29.jpg' 
+            },
+            {
+                coords: [56.9686985872836, 21.97603517],
+                iconColor: 'green',
+                title: 'Fireplace',
+                address: 'Kuldīgas nov., Kuldīga, Pils iela 5',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '19th century end',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'http://ekas.kuldiga.lv/img/atteli/119097856946fce409e7109.jpg' 
+            },
+            {
+                coords: [56.9679613370277, 21.96991806],
+                iconColor: 'green',
+                title: 'Altar',
+                address: 'Kuldīgas nov., Kuldīga, Raiņa iela 6A; Sv. Trīsvienības katoļu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '18th century, 1818-1820',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/SS.Trinità_-_Kuldiga_03.jpg/800px-SS.Trinità_-_Kuldiga_03.jpg' 
+            },
+            {
+                coords: [56.9679613370277, 21.96991806],
+                iconColor: 'green',
+                title: 'Organ',
+                address: 'Kuldīgas nov., Kuldīga, Raiņa iela 6A; Sv. Trīsvienības katoļu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1860s, 1897',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Sv._Trīsvienības_katoļu_baznīcas_ērģeles_%28Kuldīga%29_03.jpg/1280px-Sv._Trīsvienības_katoļu_baznīcas_ērģeles_%28Kuldīga%29_03.jpg' 
+            },
+            {
+                coords: [56.9679613370277, 21.96991806],
+                iconColor: 'green',
+                title: 'Pulpit',
+                address: 'Kuldīgas nov., Kuldīga, Raiņa iela 6A; Sv. Trīsvienības katoļu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '17th century end, 18th century beginning, 18th century second half',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Sv._Trīsvienības_katoļu_baznīcas_kancele_%28Kuldīga%29_01.jpg/800px-Sv._Trīsvienības_katoļu_baznīcas_kancele_%28Kuldīga%29_01.jpg' 
+            },
+            {
+                coords: [56.9679613370277, 21.96991806],
+                iconColor: 'green',
+                title: 'Side Altars (2)',
+                address: 'Kuldīgas nov., Kuldīga, Raiņa iela 6A; Sv. Trīsvienības katoļu baznīcā',
+                type: 'Art',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1777',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/SS.Trinità_-_Kuldiga_05.jpg/800px-SS.Trinità_-_Kuldiga_05.jpg' 
+            },
+            {
+                coords: [56.9675919, 21.972715],
+                iconColor: 'purple',
+                title: 'Complex of Two Residential Buildings',
+                address: 'Kuldīgas nov., Kuldīga, Kalna iela 13; Kuldīgas nov., Kuldīga, Kalna iela 15',
+                type: 'Architecture',
+                valueGroup: 'Regionally Significant Cultural Monument',
+                dating: 'mid 18th century',
+                accessibility: 'Not Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Kalna_ielas_komplekss_13_un_15_%2810%29.jpg/1280px-Kalna_ielas_komplekss_13_un_15_%2810%29.jpg' 
+            },
+            {
+                coords: [56.9683399, 21.9730394],
+                iconColor: 'purple',
+                title: 'Bridge Over the Venta River',
+                address: 'Kuldīgas nov., Kuldīga, Kalna iela',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1874',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Bridge_in_Kuldīga%281%29.jpg/1024px-Bridge_in_Kuldīga%281%29.jpg' 
+            },
+            {
+                coords: [56.9703519, 21.968469],
+                iconColor: 'purple',
+                title: 'Residential Building',
+                address: 'Kuldīgas nov., Kuldīga, 1905. gada iela 12',
+                type: 'Architecture',
+                valueGroup: 'Regionally Significant Cultural Monument',                dating: '1850-1870',
+                accessibility: 'Not Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Dwelling_house_XIX_%281905._gada_iela_12%29.jpg/1280px-Dwelling_house_XIX_%281905._gada_iela_12%29.jpg' 
+            },
+            {
+                coords: [56.96812389, 21.97151416],
+                iconColor: 'purple',
+                title: 'Residential Building',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 7',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1630 second half',
+                accessibility: 'Not Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Old_building_in_Kuldīga.jpg/1280px-Old_building_in_Kuldīga.jpg' 
+            },
+            {
+                coords: [56.9686959, 21.970718],
+                iconColor: 'purple',
+                title: 'Duke\'s Pharmacy, Now Residential Building',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 10',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '16th - 17th century',
+                accessibility: 'Not Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Hercoga_Jēkaba_galma_aptieka%2C_13.05.2012..jpg/1280px-Hercoga_Jēkaba_galma_aptieka%2C_13.05.2012..jpg' 
+            },
+            {
+                coords: [56.97022983, 21.97324584],
+                iconColor: 'purple',
+                title: 'St. Catherine\'s Lutheran Church',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 33',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1645, 1748, 1808, 1866, 1905, 1968',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Kuldīga_-_church%281%29.jpg/1024px-Kuldīga_-_church%281%29.jpg' 
+            },
+            {
+                coords: [56.9697569, 21.976223],
+                iconColor: 'purple',
+                title: 'Castle Mill with Equipment',
+                address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 36',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '13th century, 1807, 1930s',
+                accessibility: 'Partly Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Pils_dzirnavas%2C_13.05.2012..jpg/1280px-Pils_dzirnavas%2C_13.05.2012..jpg' 
+            },
+            {
+                coords: [56.9676509, 21.971327],
+                iconColor: 'purple',
+                title: 'Residential Building',
+                address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 1',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1800-1820',
+                accessibility: 'Not Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Kuldiga_-_panoramio_-_Laima_Gūtmane_%28simka%E2%80%A6_%286%29.jpg/1280px-Kuldiga_-_panoramio_-_Laima_Gūtmane_%28simka%E2%80%A6_%286%29.jpg' 
+            },
+            {
+                coords: [56.96840208, 21.97270875],
+                iconColor: 'purple',
+                title: 'Residential Building',
+                address: 'Kuldīgas nov., Kuldīga, Kalna iela 14',
+                type: 'Architecture',
+                valueGroup: 'Regionally Significant Cultural Monument',
+                dating: '1800-1820',
+                accessibility: 'Not Available',
+                status: 'Unsatisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Dzīvojamā_ēka_Kalna_ielā_14.jpg/1024px-Dzīvojamā_ēka_Kalna_ielā_14.jpg' 
+            },
+            {
+                coords: [56.96852279, 21.96727625],
+                iconColor: 'purple',
+                title: 'Residential Building',
+                address: 'Kuldīgas nov., Kuldīga, Liepājas iela 17',
+                type: 'Architecture',
+                valueGroup: 'Regionally Significant Cultural Monument',
+                dating: '18th century end',
+                accessibility: 'Not Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Liepājas_iela_17_Kuldiga.jpg/1024px-Liepājas_iela_17_Kuldiga.jpg' 
+            },
+            {
+                coords: [56.97137832, 21.96614161],
+                iconColor: 'purple',
+                title: 'Bell Tower of St. Peter\'s Chapel',
+                address: 'Kuldīgas nov., Kuldīga, Pētera iela 3',
+                type: 'Architecture',
+                valueGroup: 'Regionally Significant Cultural Monument',
+                dating: '1783',
+                accessibility: 'Partly Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/St._Peters_chapels_belfry_after_repairs_%28anno_1782%29.jpg/1280px-St._Peters_chapels_belfry_after_repairs_%28anno_1782%29.jpg' 
+            },
+            {
+                coords: [56.96947698, 21.9764049],
+                iconColor: 'purple',
+                title: 'Guard House of Kuldīga Castle',
+                address: 'Kuldīgas nov., Kuldīga, Pils iela 4',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1735',
+                accessibility: 'Not Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/The_building_at_Pils_street_%28Kuldīga%29.JPG/1024px-The_building_at_Pils_street_%28Kuldīga%29.JPG' 
+            },
+            {
+                coords: [56.9678139, 21.969925],
+                iconColor: 'purple',
+                title: 'St. Trinity\'s Catholic Church',
+                address: 'Kuldīgas nov., Kuldīga, Raiņa iela 6A',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '1640',
+                accessibility: 'Available',
+                status: 'Satisfactory',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Kuldīgas_katoļu_baznīca.jpg/1280px-Kuldīgas_katoļu_baznīca.jpg' 
+            },
+            {
+                coords: [56.96796831, 21.970842],
+                iconColor: 'orange',
+                title: 'Historic Center of Kuldīga',
+                address: 'Kuldīgas nov., Kuldīga; Baznīcas iela',
+                type: 'Urban Planning',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '13th-19th century',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Baznīcas_iela%2C_Kuldīga.jpg/1024px-Baznīcas_iela%2C_Kuldīga.jpg' 
+            },
+            {
+                coords: [56.9686985872836, 21.97603517],
+                iconColor: 'purple',
+                title: 'Residential Building',
+                address: 'Kuldīgas nov., Kuldīga, Pils iela 5',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: 'early 20th century',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Kuldiga_county_museum.jpg/1280px-Kuldiga_county_museum.jpg' 
+            },
+            {
+                coords: [56.96783294, 21.97099613],
+                iconColor: 'purple',
+                title: 'Old Town Hall',
+                address: 'Kuldīgas nov., Kuldīga,Baznīcas iela 5',
+                type: 'Architecture',
+                valueGroup: 'Nationally Significant Cultural Monument',
+                dating: '16th century',
+                accessibility: 'Available',
+                status: 'Good',
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Kuldīgas_pilsētas_rātsnams_01.JPG/1280px-Kuldīgas_pilsētas_rātsnams_01.JPG'
+            },
+        {
+            coords: [56.96783294, 21.97099613],
+            iconColor: 'purple',
+            title: 'Old Town Hall',
+            address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 5',
+            type: 'Architecture',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '17th century, 18th century, 1806',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Bazn%C4%ABcas_iela_5_Kuldiga.jpg/1024px-Bazn%C4%ABcas_iela_5_Kuldiga.jpg' 
+        },
+        {
+            coords: [56.96848377, 21.97103631],
+            iconColor: 'purple',
+            title: 'Residential Building',
+            address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 9',
+            type: 'Architecture',
+            valueGroup: 'Locally Significant Cultural Monument',
+            dating: '19th century second half',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Dz%C4%ABvojam%C4%81_%C4%93ka%2C_Kuld%C4%ABga%2C_Bazn%C4%ABcas_iela_9_%281%29.jpg/1280px-Dz%C4%ABvojam%C4%81_%C4%93ka%2C_Kuld%C4%ABga%2C_Bazn%C4%ABcas_iela_9_%281%29.jpg' 
+        },
+        {
+            coords: [56.9663718, 21.96809951],
+            iconColor: 'purple',
+            title: 'St. Anna/s Lutheran Church in Kuldīga',
+            address: 'Kuldīgas nov., Kuldīga, Dzirnavu iela 12',
+            type: 'Architecture',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '1899-1904',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Kuld%C4%ABga%2C_luter%C3%A1nsk%C3%BD_kostel_svat%C3%A9_Anny.jpg/800px-Kuld%C4%ABga%2C_luter%C3%A1nsk%C3%BD_kostel_svat%C3%A9_Anny.jpg' 
+        },
+        {
+            coords: [56.9685789, 21.96992],
+            iconColor: 'purple',
+            title: 'Residential and Utility Building',
+            address: 'Kuldīgas nov., Kuldīga, Liepājas iela 3a',
+            type: 'Architecture',
+            valueGroup: 'Regionally Significant Cultural Monument',
+            dating: '1828-1839, 1870s',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Liep%C4%81jas_iela_3a.jpg/1280px-Liep%C4%81jas_iela_3a.jpg' 
+        },
+        {
+            coords: [56.96853875, 21.96907217],
+            iconColor: 'purple',
+            title: 'Residential Building',
+            address: 'Kuldīgas nov., Kuldīga, 1905. gada iela 1',
+            type: 'Architecture',
+            valueGroup: 'Locally Significant Cultural Monument',
+            dating: '18th century, 19th century end, early 20th century',
+            accessibility: 'Partly Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Dz%C4%ABvojam%C4%81_%C4%93ka%2C_Kuld%C4%ABga%2C_1905._gada_iela_1.jpg/1280px-Dz%C4%ABvojam%C4%81_%C4%93ka%2C_Kuld%C4%ABga%2C_1905._gada_iela_1.jpg' 
+        },
+        {
+            coords: [56.97955246, 21.96255538],
+            iconColor: 'purple',
+            title: 'Virka Manor House',
+            address: 'Kuldīgas nov., Kuldīga, Virkas iela 27',
+            type: 'Architecture',
+            valueGroup: 'Regionally Significant Cultural Monument',
+            dating: '18th century, 19th century end, early 20th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/7/70/Virkas_mui%C5%BEa_Kuld%C4%ABg%C4%81_2000-09-16.jpg' 
+        },
+        {
+            coords: [56.96853875, 21.96907217],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, 1905. gada iela 1',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/1905_g_iela_DK_%281%29.jpg/800px-1905_g_iela_DK_%281%29.jpg' 
+        },
+        {
+            coords: [56.96852439, 21.9734307],
+            iconColor: 'purple',
+            title: 'German Gymnasium, Now Educational Institution',
+            address: 'Kuldīgas nov., Kuldīga, Kalna iela 19',
+            type: 'Architecture ',
+            valueGroup: 'Locally Significant Cultural Monument',
+            dating: '1869',
+            accessibility: 'Partly Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/V%C4%81cu_%C4%A3imn%C4%81zija_%28Kalna_iela_19%29.jpg/1024px-V%C4%81cu_%C4%A3imn%C4%81zija_%28Kalna_iela_19%29.jpg' 
+        },
+        {
+            coords: [56.97115527, 21.96936307],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Alunāna iela 4',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'middle of 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Alun%C4%81na_iela_4_%282%29.jpg/1280px-Alun%C4%81na_iela_4_%282%29.jpg' 
+        },
+        {
+            coords: [56.9706759, 21.968363],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, 1905. gada iela 14',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century third quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Durvju_komplekts%2C_Kuld%C4%ABga%2C_1905._gada_iela_14.jpg/800px-Durvju_komplekts%2C_Kuld%C4%ABga%2C_1905._gada_iela_14.jpg' 
+        },
+        {
+            coords: [56.9696279, 21.971288],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 20',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century second quarter',
+            accessibility: 'Not Available',
+            status: 'Satisfactory',
+            img: 'http://ekas.kuldiga.lv/img/atteli/118726893146c449430e437.jpg' 
+        },
+        {
+            coords: [56.96364715, 21.96745511],
+            iconColor: 'purple',
+            title: 'Chapel of Charlotte Manor',
+            address: 'Kuldīgas nov., Kuldīga, Ziedu iela 15',
+            type: 'Architecture ',
+            valueGroup: 'Locally Significant Cultural Monument',
+            dating: '19th century second quarter',
+            accessibility: 'Partly Available',
+            status: 'Unsatisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/%C5%A0arlotenrue_mui%C5%BEas_kapli%C4%8Da.jpg/1024px-%C5%A0arlotenrue_mui%C5%BEas_kapli%C4%8Da.jpg' 
+        },
+        {
+            coords: [56.9678139, 21.969925],
+            iconColor: 'green',
+            title: 'Communion Rail Balustrade',
+            address: 'Kuldīgas nov., Kuldīga, Raiņa iela 6A',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '18th century second half',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Sv._Tr%C4%ABsvien%C4%ABbas_kato%C4%BCu_bazn%C4%ABcas_Dievgalda_balustr%C4%81de.jpg/1920px-Sv._Tr%C4%ABsvien%C4%ABbas_kato%C4%BCu_bazn%C4%ABcas_Dievgalda_balustr%C4%81de.jpg' 
+        },
+        {
+            coords: [56.96835974, 21.96659745],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Liepājas iela 20',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century second quarter',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Liep%C4%81jas_iela_20_%281%29.jpg/800px-Liep%C4%81jas_iela_20_%281%29.jpg' 
+        },
+        {
+            coords: [56.9708589, 21.973945],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Upes iela 1',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century second quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Upes_iela_1.jpg/800px-Upes_iela_1.jpg' 
+        },
+        {
+            coords: [56.96752634, 21.96770226],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Dzirnavu iela 6',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century third quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Dzirnavu_iela_6_%281%29.jpg/1280px-Dzirnavu_iela_6_%281%29.jpg' 
+        },
+        {
+            coords: [56.97358987, 21.96568318],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Virkas iela 1',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century first half',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Virkas_iela_1_%282%29.jpg/1280px-Virkas_iela_1_%282%29.jpg' 
+        },
+        {
+            coords: [56.97173843, 21.96996118],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Smilšu iela 23',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Smil%C5%A1u_iela_23_%282%29.jpg/800px-Smil%C5%A1u_iela_23_%282%29.jpg' 
+        },
+        {
+            coords: [56.97175591, 21.97001482],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Ventspils iela 12',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century third quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Ventspils_iela_12_%282%29_1.jpg/800px-Ventspils_iela_12_%282%29_1.jpg' 
+        },
+        {
+            coords: [56.96750335, 21.96889144],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Raiņa iela 7',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century third quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Rai%C5%86a_iela_7_%282%29.jpg/800px-Rai%C5%86a_iela_7_%282%29.jpg' 
+        },
+        {
+            coords: [56.96833079, 21.96696453],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Liepājas iela 16',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Liep%C4%81jas_iela_16_%282%29.jpg/800px-Liep%C4%81jas_iela_16_%282%29.jpg' 
+        },
+        {
+            coords: [56.96829994, 21.96226351],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Liepājas iela 36',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Liep%C4%81jas_iela_16_%282%29.jpg/800px-Liep%C4%81jas_iela_16_%282%29.jpg' 
+        },
+        {
+            coords: [56.96852293, 21.96199867],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Liepājas iela 38',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century third quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Liep%C4%81jas_iela_38_%282%29.jpg/800px-Liep%C4%81jas_iela_38_%282%29.jpg' 
+        },
+        {
+            coords: [56.9671769, 21.96826524],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Mucenieku iela 1',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Mucenieku_iela_1_%283%29.jpg/1280px-Mucenieku_iela_1_%283%29.jpg' 
+        },
+        {
+            coords: [56.96726613, 21.96990757],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Strautu iela 3',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '1870s',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Strautu_iela_3_%281%29.jpg/800px-Strautu_iela_3_%281%29.jpg' 
+        },
+        {
+            coords: [56.9640059, 21.974518],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 33',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century first half',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Jelgavas_iela_33_%281%29.jpg/1280px-Jelgavas_iela_33_%281%29.jpg' 
+        },
+        {
+            coords: [56.96861068, 21.96621838],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Liepājas iela 25',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century second half',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Liep%C4%81jas_iela_25_%282%29.jpg/1280px-Liep%C4%81jas_iela_25_%282%29.jpg' 
+        },
+        {
+            coords: [56.9669319, 21.973633],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Rumbas iela 13',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century second quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Rumbas_iela_13_%281%29.jpg/800px-Rumbas_iela_13_%281%29.jpg' 
+        },
+        {
+            coords: [56.9735971, 21.96531371],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Ventspils iela 37',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Ventspils_iela_37_%282%29.jpg/1280px-Ventspils_iela_37_%282%29.jpg' 
+        },
+        {
+            coords: [56.97278278, 21.96666228],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Ventspils iela 31',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Ventspils_iela_31_%281%29.jpg/1280px-Ventspils_iela_31_%281%29.jpg' 
+        },
+        {
+            coords: [56.9640429, 21.972205],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Skrundas iela 12',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Skrundas_iela_12_%282%29.jpg/800px-Skrundas_iela_12_%282%29.jpg' 
+        },
+        {
+            coords: [56.9647739, 21.973538],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 25',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Jelgavas_iela_25.jpg/800px-Jelgavas_iela_25.jpg' 
+        },
+        {
+            coords: [56.97072303, 21.97344446],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 30',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Bazn%C4%ABcas_iela_30_%282%29.jpg/800px-Bazn%C4%ABcas_iela_30_%282%29.jpg' 
+        },
+        {
+            coords: [56.9675699, 21.971895],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Jelgavas iela 2',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century second quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/2023Jelgavas_iela_2.jpg/800px-2023Jelgavas_iela_2.jpg' 
+        },
+        {
+            coords: [56.9636799, 21.972042],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Skrundas iela 14',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century third quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Skrundas_iela_14_%281%29.jpg/800px-Skrundas_iela_14_%281%29.jpg' 
+        },
+        {
+            coords: [56.96811905, 21.96748105],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Liepājas iela 14',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century first half',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Liep%C4%81jas_iela_14_%282%29.jpg/800px-Liep%C4%81jas_iela_14_%282%29.jpg' 
+        },
+        {
+            coords: [56.96764503, 21.9725624],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Kalna iela 11',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Durvju_komplekts%2C_Kuld%C4%ABga%2C_Kalna_iela_11.jpg/800px-Durvju_komplekts%2C_Kuld%C4%ABga%2C_Kalna_iela_11.jpg' 
+        },
+        {
+            coords: [56.972400074971794, 21.96769453],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Ventspils iela 23',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '19th century first quarter',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Ventspils_iela_23_%282%29.jpg/800px-Ventspils_iela_23_%282%29.jpg' 
+        },
+        {
+            coords: [56.96925229, 21.97342514],
+            iconColor: 'green',
+            title: 'Door Set',
+            address: 'Kuldīgas nov., Kuldīga, Kalna iela 23',
+            type: 'Art',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: 'mid 19th century',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/2019_01_Kalna_iela_23_%281%29.jpg/1280px-2019_01_Kalna_iela_23_%281%29.jpg' 
+        },
+        {
+            coords: [56.96796831, 21.970842],
+            iconColor: 'purple',
+            title: 'Bridges Over the Alekšupīte River (6)',
+            address: 'Kuldīgas nov., Kuldīga; Kuldīgas pilsētas vēsturiskais centrs  (Raiņa ielā, Mucenieku ielā, Pasta ielā, Skolas ielā, pie Kalna ielas un Baznīcas ielā)',
+            type: 'Architecture',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '17th century, 19th century end, 20th century',
+            accessibility: 'Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Baznicas_iela_bridge_Kuldiga.jpg/1024px-Baznicas_iela_bridge_Kuldiga.jpg' 
+        },
+        {
+            coords: [56.96796831, 21.970842],
+            iconColor: 'red',
+            title: 'Needle Factory',
+            address: 'Kuldīgas nov., Kuldīga, Kalpaka iela 1; Liepājas iela 37; Kalpaka iela 2; Kalpaka iela 4; Liepājas iela 39; Kalpaka iela',
+            type: 'Historical Event Site ',
+            valueGroup: 'Regionally Significant Cultural Monument',
+            dating: 'mid 19th century - 1991',
+            accessibility: 'Partly Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Kalpaka_iela_2_%283%29.jpg/1280px-Kalpaka_iela_2_%283%29.jpg' 
+        },
+        {
+            coords: [56.9702104, 21.9725914],
+            iconColor: 'purple',
+            title: 'Overlord/s Court House',
+            address: 'Kuldīgas nov., Kuldīga, Baznīcas iela 34',
+            type: 'Architecture ',
+            valueGroup: 'Regionally Significant Cultural Monument',
+            dating: '18th century end, 19th century second quarter',
+            accessibility: 'Not Available',
+            status: 'Satisfactory',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/2016_03_Baznicas_iela_%284%29.jpg/800px-2016_03_Baznicas_iela_%284%29.jpg' 
+        },
+        {
+            coords: [56.9690789, 21.971183],
+            iconColor: 'purple',
+            title: 'Residential Building',
+            address: 'Kuldīgas nov., Kuldīga, Kuldīga, Baznīcas iela 17',
+            type: 'Architecture',
+            valueGroup: 'Nationally Significant Cultural Monument',
+            dating: '18th century second half',
+            accessibility: 'Available',
+            status: 'Good',
+            img: 'http://ekas.kuldiga.lv/img/atteli/118767556046ca7da83f171.jpg' 
+        },
+        {
+            coords: [56.96796831, 21.970842],
+            iconColor: 'orange',
+            title: 'Outskirts of Kuldīga/s Historic Center with Venta Valley',
+            address: 'Kuldīgas nov., Kuldīga; Kuldīgas pilsētas vēsturiskajam centram pieguļošā teritorija',
+            type: 'Urban Planning',
+            valueGroup: 'Locally Significant Cultural Monument',
+            dating: '17th-20th century 30s',
+            accessibility: 'Available',
+            status: '',
+            img: 'https://whc.unesco.org/uploads/thumbs/site_1658_0007-1000-1642-20220427120553.jpg' 
+        },
+        ];
+
+        sites.forEach(function(site) {
+            var marker = L.marker(site.coords, {
+                icon: L.AwesomeMarkers.icon({
+                    markerColor: site.iconColor,
+                    prefix: 'fa',
+                    icon: 'info-circle'
+                })
+            }).bindPopup(
+                '<h3>' + site.title + '</h3>' +
+                '<p><b>Address:</b> ' + site.address + '</p>' +
+                '<p><b>Type:</b> ' + site.type + '</p>' +
+                '<p><b>Value Group:</b> ' + site.valueGroup + '</p>' +
+                '<p><b>Dating:</b> ' + site.dating + '</p>' +
+                '<p><b>Accessibility:</b> ' + site.accessibility + '</p>' +
+                '<p><b>Status:</b> ' + site.status + '</p>' +
+                '<img src="' + site.img + '" width="100%" />'
+            );
+
+            markers.addLayer(marker);
+        });
+
+        map.addLayer(markers);
+    </script>
+</body>
+</html>

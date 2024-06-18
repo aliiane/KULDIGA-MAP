@@ -1,0 +1,78 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+nav {
+    margin: 1rem 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+}
+
+nav ul li a.active {
+    font-weight: bold;
+    color: #ffd700;
+}
+
+main {
+    padding: 2rem;
+    background: #f4f4f4;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #333;
+    color: #fff;
+}
+
+section {
+    margin: 2rem 0;
+}
+
+#map {
+    height: 500px; /* Adjust height as needed */
+}
+
+/* Optional: Additional styling for toggle button and hidden content */
+.toggle-button {
+    display: inline-block;
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
